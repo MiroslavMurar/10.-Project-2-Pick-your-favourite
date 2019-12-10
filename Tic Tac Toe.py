@@ -33,21 +33,23 @@ def first_player():
 
     lst = [0,1]
     player1 = random.choice(lst)
-    # print(player1)
+
     if player1 == 1:
         player2 = 0
+        print('First player is Player1')
     else:
         player2 = 1
+        print('First player is Player2')
 
-def choose_sign(player1, player2):
-    if player1 > player2:
-        while True:
-            inpt = input('Insert x or o: ')
-            if inpt != 'o' and inpt != 'x':
-                print('You have to insert x or o')
-                continue
-            else:
-                return inpt
+
+def choose_sign():
+    while True:
+        sypher = input('Player insert x or o: ')
+        if sypher != 'o' and sypher != 'x':
+            print('You have to insert x or o')
+            continue
+        else:
+            return sypher
 
 
 def print_progress(dic):
@@ -60,11 +62,33 @@ def print_progress(dic):
     print('------')
 
 
+def win(dic, sypher):
+
+    if dic['1'] and dic['2'] and dic['3'] == sypher:
+        return 'Winner !!!'
+    if dic['4'] and dic['5'] and dic['6'] == sypher:
+        return 'Winner !!!'
+    if dic['7'] and dic['8'] and dic['9'] == sypher:
+        return 'Winner !!!'
+
+    if dic['1'] and dic['4'] and dic['7'] == sypher:
+        return 'Winner !!!'
+    if dic['2'] and dic['5'] and dic['8'] == sypher:
+        return 'Winner !!!'
+    if dic['3'] and dic['6'] and dic['9'] == sypher:
+        return 'Winner !!!'
+
+    if dic['1'] and dic['5'] and dic['9'] == sypher:
+        return 'Winner !!!'
+    if dic['3'] and dic['5'] and dic['7'] == sypher:
+        return 'Winner !!!'
+
+    return False
+
 def flow(dic, sypher1):
     while True:
         try:
             inpt = input('Insert position: ')
-
             dic[inpt] = sypher1
             print_progress(dic)
             continue
@@ -77,12 +101,9 @@ def flow(dic, sypher1):
 
 
 def main():
-    # print_progress(dic)
-    # flow(dic, 'o')
+    print_template()
     first_player()
-    # print(player1)
-    choose_sign(player1, player2)
-    print(player1)
 
+    flow(dic, choose_sign())
 
 main()
