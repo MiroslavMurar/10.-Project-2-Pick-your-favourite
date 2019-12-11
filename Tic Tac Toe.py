@@ -25,12 +25,8 @@ Let's start the game''')
     print('='*27)
 
 def first_player():
-       lst = [0,1]
+       lst = [0, 1]
        random.shuffle(lst)
-       if lst[0] == 1:
-           print('First player is Player1')
-       else:
-           print('First player is Player2')
        return lst
 
 
@@ -39,7 +35,7 @@ def choose_sign(player1, player2):
         if player1 == 1:
             player = 'Player1'
             choices = ['x', 'o']
-            sypher = input('Random choose {} as first player. {} please insert your sign: x or o '.format(player, player))
+            sypher = input('Random choose {} as first player. {} please insert your sign: x or o \n'.format(player, player))
             if sypher != choices[0] and sypher != choices[1]:
                 print('You have to insert x or o')
                 continue
@@ -52,9 +48,9 @@ def choose_sign(player1, player2):
         elif player2 == 1:
             player = 'Player2'
             choices = ['x', 'o']
-            sypher = input('Random choose {} as first player. {} please insert your sign: x or o '.format(player, player))
+            sypher = input('Random choose {} as first player. {} please insert your sign: x or o \n'.format(player, player))
             if sypher != choices[0] and sypher != choices[1]:
-                print('You have to insert x or o')
+                print('You have to insert x or o ')
                 continue
             else:
                 if sypher == 'x':
@@ -96,16 +92,25 @@ def win(dic, sypher):
 
     return False
 
+def exit_requests(player1, player2):
+    for i in dic:
+        dic[i] = ' '
+    if player1 == 1:
+        print('Player2 `s turn')
+        return (0, 1)
+    elif player2 == 1:
+        print('Player1 `s turn')
+        return (1, 0)
 
 def main():
     while True:
         next_game = True
         while next_game:
             next_game = False
-            player1, player2 = first_player()
             print_template()
-            score = {'Player1': 0, 'Player2': 0}
+            player1, player2 = first_player()
             mark_player1, mark_player2 = choose_sign(player1, player2)
+            score = {'Player1': 0, 'Player2': 0}
             count = 0
             while count < 3:
                 count += 1
@@ -123,8 +128,8 @@ def main():
                             else:
                                 print('Possition is occupied ')
                                 continue
-                        except ValueError as err:
-                            print('You have to insert integer 1-9 !', err)
+                        except :
+                            print('You have to insert integer 1-9 !')
                             continue
                         player1, player2 = 0, 1
 
@@ -141,37 +146,19 @@ def main():
                             else:
                                 print('Possition is occupied ')
                                 continue
-                        except ValueError as err:
-                            print('You have to insert integer 1-9 !', err)
+                        except :
+                            print('You have to insert integer 1-9 !')
                             continue
-                        player1, player2 = (1, 0)
-
-                print('Score is: Player1:{} Player2:{} \n'.format(score['Player1'], score['Player2']))
-
+                        player1, player2 = 1, 0
+                print('Score is: Player1:{}   Player2:{} \n'.format(score['Player1'], score['Player2']))
 
                 if count < 3:
-                    exit_request = input('Do you want to continue ? y/n ')
+                    exit_request = input('Do you want to play next round ? y=yes, anything for no  ')
+                    player1, player2 = exit_requests(player1, player2)
                     if exit_request == 'y':
-                        for i in dic:
-                            dic[i] = ' '
-
-                        if player1 == 1:
-                            player1, player2 = (0, 1)
-                            print('Player2 `s turn')
-
-                        elif player2 == 1:
-                            player1, player2 = (1, 0)
-                            print('Player1 `s turn')
-
                         continue
-
-                    elif exit_request == 'n':
-                        break
-
                     else:
-                        while True:
-                            print('You have to choose \'y\' or \'n\'')
-                            continue
+                        break
 
         try:
             game_input = input('Do you want to play next game ? y=yes, anything for no  ')
