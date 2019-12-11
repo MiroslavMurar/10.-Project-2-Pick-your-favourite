@@ -1,24 +1,4 @@
-# # dic = {'1':' ', '2':' ', '3':' ',
-# #        '4':' ', '5':' ', '6':' ',
-# #        '7':' ', '8':' ', '9':' ',
-# #        }
-#
-#
-#
-# dic = {'1':'o', '2':'o', '3':'o',
-#        '4':' ', '5':' ', '6':' ',
-#        '7':' ', '8':' ', '9':' '
-#        }
-#
-#
-# if dic['1'] and dic['2'] and dic['3'] =='o':
-#        print('OK')
-
-
 import random
-
-player1 = None
-player2 = None
 
 dic = {'1':' ', '2':' ', '3':' ',
        '4':' ', '5':' ', '6':' ',
@@ -45,19 +25,38 @@ Let's start the game''')
     print('='*27)
 
 def first_player():
-       lst = [0,1]
+       lst = [0, 1]
        random.shuffle(lst)
        return lst
 
 
-def choose_sign():
+def choose_sign(player1, player2):
     while True:
-        sypher = input('Player insert x or o: ')
-        if sypher != 'o' and sypher != 'x':
-            print('You have to insert x or o')
-            continue
-        else:
-            return sypher
+        if player1 == 1:
+            player = 'Player1'
+            choices = ['x', 'o']
+            sypher = input('Random choose {} as first player. {} please insert your sign: x or o \n'.format(player, player))
+            if sypher != choices[0] and sypher != choices[1]:
+                print('You have to insert x or o')
+                continue
+            else:
+                if sypher == 'x':
+                    return ['x', 'o']
+                else:
+                    return ['o', 'x']
+
+        elif player2 == 1:
+            player = 'Player2'
+            choices = ['x', 'o']
+            sypher = input('Random choose {} as first player. {} please insert your sign: x or o \n'.format(player, player))
+            if sypher != choices[0] and sypher != choices[1]:
+                print('You have to insert x or o ')
+                continue
+            else:
+                if sypher == 'x':
+                    return ['o', 'x']
+                else:
+                    return ['x', 'o']
 
 
 def print_progress(dic):
@@ -72,69 +71,105 @@ def print_progress(dic):
 
 def win(dic, sypher):
 
-    if dic['1'] and dic['2'] and dic['3'] == sypher:
-        return 'Winner !!!'
-    if dic['4'] and dic['5'] and dic['6'] == sypher:
-        return 'Winner !!!'
-    if dic['7'] and dic['8'] and dic['9'] == sypher:
-        return 'Winner !!!'
+    if dic['1'] == dic['2'] == dic['3'] == sypher:
+        return True
+    if dic['4'] == dic['5'] == dic['6'] == sypher:
+        return True
+    if dic['7'] == dic['8'] == dic['9'] == sypher:
+        return True
 
-    if dic['1'] and dic['4'] and dic['7'] == sypher:
-        return 'Winner !!!'
-    if dic['2'] and dic['5'] and dic['8'] == sypher:
-        return 'Winner !!!'
-    if dic['3'] and dic['6'] and dic['9'] == sypher:
-        return 'Winner !!!'
+    if dic['1'] == dic['4'] == dic['7'] == sypher:
+        return True
+    if dic['2'] == dic['5'] == dic['8'] == sypher:
+        return True
+    if dic['3'] == dic['6'] == dic['9'] == sypher:
+        return True
 
-    if dic['1'] and dic['5'] and dic['9'] == sypher:
-        return 'Winner !!!'
-    if dic['3'] and dic['5'] and dic['7'] == sypher:
-        return 'Winner !!!'
+    if dic['1'] == dic['5'] == dic['9'] == sypher:
+        return True
+    if dic['3'] == dic['5'] == dic['7'] == sypher:
+        return True
 
     return False
 
-def flow(dic, sypher1):
-    while True:
-        try:
-            inpt = input('Insert position: ')
-            dic[inpt] = sypher1
-            print_progress(dic)
-            continue
-
-        except ValueError as err:
-            print('You have to insert integer !', err)
-            continue
-
-
-
+def exit_requests(player1, player2):
+    for i in dic:
+        dic[i] = ' '
+    if player1 == 1:
+        print('Player2 `s turn')
+        return (0, 1)
+    elif player2 == 1:
+        print('Player1 `s turn')
+        return (1, 0)
 
 def main():
-    print_template()
-    player1, player2 = first_player()
-    print(player1, player2)
-    # flow(dic, choose_sign())
+    while True:
+        next_game = True
+        while next_game:
+            next_game = False
+            print_template()
+            player1, player2 = first_player()
+            mark_player1, mark_player2 = choose_sign(player1, player2)
+            score = {'Player1': 0, 'Player2': 0}
+            count = 0
+            while count < 3:
+                count += 1
+                while True:
+                    if player1 == 1:
+                        try:
+                            inpt = input('Player1 please insert position: ')
+                            if dic[inpt] == ' ':
+                                dic[inpt] = mark_player1
+                                print_progress(dic)
+                                if win(dic, mark_player1):
+                                    print('Player1 is winner')
+                                    score['Player1'] += 1
+                                    break
+                            else:
+                                print('Possition is occupied ')
+                                continue
+                        except :
+                            print('You have to insert integer 1-9 !')
+                            continue
+                        player1, player2 = 0, 1
+
+                    elif player2 == 1:
+                        try:
+                            inpt = input('Player2 please insert position: ')
+                            if dic[inpt] == ' ':
+                                dic[inpt] = mark_player2
+                                print_progress(dic)
+                                if win(dic, mark_player2):
+                                    print('Player2 is winner')
+                                    score['Player2'] += 1
+                                    break
+                            else:
+                                print('Possition is occupied ')
+                                continue
+                        except :
+                            print('You have to insert integer 1-9 !')
+                            continue
+                        player1, player2 = 1, 0
+                print('Score is: Player1:{}   Player2:{} \n'.format(score['Player1'], score['Player2']))
+
+                if count < 3:
+                    exit_request = input('Do you want to play next round ? y=yes, anything for no  ')
+                    player1, player2 = exit_requests(player1, player2)
+                    if exit_request == 'y':
+                        continue
+                    else:
+                        break
+
+        try:
+            game_input = input('Do you want to play next game ? y=yes, anything for no  ')
+            if game_input == 'y':
+                for i in dic:
+                    dic[i] = ' '
+                next_game = True
+            else:
+                return None
+
+        except ValueError:
+            print('You have to choose \'y\' or \'n\'')
 
 main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# _tupple = ['a', 'b']
-# random.shuffle(_tupple)
-#
-# anna, beta = _tupple
-#
-# print(anna, beta)
